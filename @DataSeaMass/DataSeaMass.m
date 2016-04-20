@@ -1,4 +1,4 @@
-classdef DataSeaMass < Data
+classdef DataSeaMass < GIRO.Data
     
     properties (Access = private)
     
@@ -91,15 +91,16 @@ classdef DataSeaMass < Data
             % Compute the RT/MZ resolutions and coordinates for the data:            
             
             OBJ_DataSeaMass.offsetRT_Sec = max(offsetRT(:)) * OBJ_DataSeaMass.SecPerPixel;
-            OBJ_DataSeaMass.RT = OBJ_DataSeaMass.offsetRT_Sec : OBJ_DataSeaMass.SecPerPixel : (OBJ_DataSeaMass.offsetRT_Sec + (OBJ_DataSeaMass.sizeRT - 1) * OBJ_DataSeaMass.offsetRT_Sec);
             RTWin_Begin_Pixel = ceil( (OBJ_DataSeaMass.RTWin_Sec(1) - OBJ_DataSeaMass.offsetRT_Sec) / OBJ_DataSeaMass.SecPerPixel );
             offsetRT = (max(offsetRT(:)) - offsetRT + 1) + RTWin_Begin_Pixel;
+            OBJ_DataSeaMass.RT = offsetRT(1)*OBJ_DataSeaMass.SecPerPixel : OBJ_DataSeaMass.SecPerPixel : (offsetRT(1) + (OBJ_DataSeaMass.sizeRT - 1) * OBJ_DataSeaMass.SecPerPixel);
+
 
             OBJ_DataSeaMass.offsetMZ_Thompson = max(offsetMZ(:)) * OBJ_DataSeaMass.ThompsonPerPixel; 
-            OBJ_DataSeaMass.MZ = OBJ_DataSeaMass.offsetMZ_Thompson : OBJ_DataSeaMass.ThompsonPerPixel : (OBJ_DataSeaMass.offsetMZ_Thompson + (OBJ_DataSeaMass.sizeMZ - 1) * OBJ_DataSeaMass.offsetMZ_Thompson);
             MZWin_Begin_Pixel = ceil( (OBJ_DataSeaMass.MZWin_Thompson(1) - OBJ_DataSeaMass.offsetMZ_Thompson) / OBJ_DataSeaMass.ThompsonPerPixel );
             offsetMZ = max(offsetMZ(:)) - offsetMZ + MZWin_Begin_Pixel;
-            
+            OBJ_DataSeaMass.MZ = offsetMZ(1)*OBJ_DataSeaMass.ThompsonPerPixel : OBJ_DataSeaMass.ThompsonPerPixel : (offsetMZ(1) + (OBJ_DataSeaMass.sizeMZ - 1) * OBJ_DataSeaMass.ThompsonPerPixel);
+          
             numMZ_Levels = ceil(log2(OBJ_DataSeaMass.Target_ResMZ_ThompsonPerPixel / OBJ_DataSeaMass.ThompsonPerPixel));
             
             sizeMZ = length(1 : 2^numMZ_Levels : OBJ_DataSeaMass.sizeMZ);
@@ -117,10 +118,14 @@ classdef DataSeaMass < Data
                     tmp = double(h5read(cell2mat(OBJ_DataSeaMass.fileName(i)), datasetname, [offsetMZ(i,j), offsetRT(i,j)], [OBJ_DataSeaMass.sizeMZ, OBJ_DataSeaMass.sizeRT]))';
                     
                     % mz downsampling:
-                    tmp = DyadicDownsampleMZ(tmp, numMZ_Levels, OBJ_DataSeaMass.BsplInteg);
+                    if (numMZ_Levels > 0 )
+                    
+                    [tmp, OBJ_DataSeaMass.sizeMZ] = OBJ_DataSeaMass.DyadicDownsampleMZ(tmp, numMZ_Levels, OBJ_DataSeaMass.BsplInteg);
+                    
+                    end
                     
                     % 
-                    OBJ_DataSeaMass.Samples(:, (i-1)*OBJ_DataSeaMass.sizeMZ+1 : i*OBJ_DataSeaMass.sizeMZ, i) = tmp;                
+                    OBJ_DataSeaMass.Samples(:, (j-1)*OBJ_DataSeaMass.sizeMZ+1 : j*OBJ_DataSeaMass.sizeMZ, i) = tmp;                
                                         
                 end
                 
@@ -180,7 +185,7 @@ classdef DataSeaMass < Data
         
         function OBJ_DataSeaMass = DataSeaMass(folderName, fileName, SeaMassResRT, SeaMassResMZ, SeaMassShrinkage, SeaMassTolerance, RTWin_Sec, MZWin_Thompson)
         
-            OBJ_DataSeaMass = OBJ_DataSeaMass@Data(folderName, fileName);
+            OBJ_DataSeaMass = OBJ_DataSeaMass@GIRO.Data(folderName, fileName);
                         
             OBJ_DataSeaMass.channelName = get_common_channels(OBJ_DataSeaMass);
             OBJ_DataSeaMass.numCommonChannels = length(OBJ_DataSeaMass.channelName);

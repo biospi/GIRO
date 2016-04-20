@@ -41,7 +41,12 @@ classdef Data
             
         end
                  
-        Samples = get_Samples(OBJ_Data)
+        function Samples = get_Samples(OBJ_Data)
+     
+            Samples = OBJ_Data.Samples;
+            
+            
+        end
         
         numSamples = get_numSamples(OBJ_Data)
           
@@ -55,7 +60,7 @@ classdef Data
         
         dispGroupOverlay(OBJ_Data)
                
-        function SampleLowResMZ = DyadicDownsampleMZ(SampleHighResMZ, numLevels, LP_Taps)
+        function [SampleLowResMZ, sizeMZ] = DyadicDownsampleMZ(OBJ_Data,SampleHighResMZ, numLevels, LP_Taps)
         
             for i = 1 : numLevels
                
@@ -69,10 +74,12 @@ classdef Data
             
             SampleLowResMZ = SampleHighResMZ;
             
+            sizeMZ = size(SampleLowResMZ, 2);
+            
         end
         
                 
-        function SampleLowResRT = DyadicDownsampleRT(SampleHighResRT, numLevels, LP_Taps)
+        function SampleLowResRT = DyadicDownsampleRT(OBJ_Data,SampleHighResRT, numLevels, LP_Taps)
            
             for i = 1 : numLevels
                
