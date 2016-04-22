@@ -1,4 +1,4 @@
-function [IBspl, DIBspl] = BsplIntegral(t, x, d, NFactor )
+function [IBspl, DIBspl] = BsplIntegral(OBJ_GIRO, t, x, d, NFactor )
 
 % This is to evaluate the degree d B-spline functions and create a matrix. 
 % of basis functions. 
@@ -130,9 +130,9 @@ if NFactor == 1 % L1 normalising
         
 end
 
-IBspl = sparse(IBspl);
+IBspl = sparse(IBspl(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1), OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1)) );
 % 
-DIBspl = sparse(DIBspl);
+DIBspl = sparse(DIBspl(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1), OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1) ) );
 
 % HBspl = sparse(HBspl);
 

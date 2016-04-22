@@ -1,26 +1,17 @@
-function NMASK = normalise_LS(OBJ_Normalise, lengthB)
+function OBJ_Normalise = normalise_LS(OBJ_Normalise, lengthB)
 % Deriving the normalising factors:
         
-sizeRT = size(OBJ_Normalise.Samples,1);
-
-OBJ_Normalise.TarNorm = log(Anscombe(OBJ_Normalise.Samples));               
+OBJ_Normalise.TarNorm = log(GIRO.Anscombe(OBJ_Normalise.Samples));               
  
 OBJ_Normalise.RefNorm = mean(OBJ_Normalise.TarNorm,3);
 
-OBJ_Normalise.RefNorm = repmat(OBJ_Normalise.RefNorm,[1,1,OBJ_Normalise.numSamples]);
+BsplBasis = OBJ_Normalise.get_BsplDict_norm_LS(lengthB);
 
-NFactor = OBJ_Normalise.RefNorm - OBJ_Normalise.TarNorm;
+for i = 1 : OBJ_Normalise.numSamples
 
-BsplBasis = get_BsplDict_norm_LS(sizeRT, lengthB);
- 
-% Fit the NFactor by least square:
-NMASK = zeros(size(NFactor));
-
-for k = 1 : OBJ_Normalise.numSamples
-
-    LS_APP = BsplBasis \ NFactor(:,:,k);
+    LS_APP = BsplBasis \ (OBJ_Normalise.RefNorm - OBJ_Normalise.TarNorm(:,:,i));
     
-    NMASK(:,:,k) = exp(2 * BsplBasis * LS_APP); % The factor of 2 compensates the Anscombe
+    OBJ_Normalise.NMASK(:,:,i) = exp(2 * BsplBasis * LS_APP); % The factor of 2 compensates the Anscombe
     
 end
             

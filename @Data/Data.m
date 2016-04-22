@@ -44,17 +44,44 @@ classdef Data
         function Samples = get_Samples(OBJ_Data)
      
             Samples = OBJ_Data.Samples;
+                        
+        end
+        
+        function numSamples = get_numSamples(OBJ_Data)
             
+            numSamples = OBJ_Data.numSamples;
             
         end
         
-        numSamples = get_numSamples(OBJ_Data)
+        function levelsRT = get_levelsRT(OBJ_Data)
+            
+            levelsRT = log2(OBJ_Data.sizeDyadicRT);
+            
+        end
           
-        [RT, sizeRT, sizeDyadicRT, indRT_Start] = get_RT_info(OBJ_Data)
+        function [RT, sizeRT, sizeDyadicRT, indRT_Start] = get_RT_info(OBJ_Data)
         
-        MZ = get_MZ(OBJ_Data)
+            RT = OBJ_Data.RT;
+            
+            sizeRT = OBJ_Data.sizeRT;
+            
+            sizeDyadicRT = OBJ_Data.sizeDyadicRT;
+            
+            indRT_Start = OBJ_Data.indRT_Start;
+            
+        end
+            
+        function MZ = get_MZ(OBJ_Data)
         
-        dispSample(OBJ_Data)
+            MZ = OBJ_Data.MZ;
+            
+        end
+            
+        function dispSample(OBJ_Data, indFig, indSample)
+            
+            figure(indFig); imagesc(OBJ_Data.MZ, OBJ_Data.RT, OBJ_Data(:,:,indSample))
+            
+        end
         
         dispOverlay(OBJ_Data)
         
@@ -79,7 +106,7 @@ classdef Data
         end
         
                 
-        function SampleLowResRT = DyadicDownsampleRT(OBJ_Data,SampleHighResRT, numLevels, LP_Taps)
+        function SampleLowResRT = DyadicDownsampleRT(OBJ_Data, SampleHighResRT, numLevels, LP_Taps)
            
             for i = 1 : numLevels
                
@@ -91,9 +118,8 @@ classdef Data
                                
             end
             
-            SampleLowResRT = SampleHighResMZ;
-            
-            
+            SampleLowResRT = SampleHighResRT;
+                        
         end
         
     end

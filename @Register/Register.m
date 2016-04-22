@@ -1,4 +1,4 @@
-classdef (Abstract) Register
+classdef Register < handle
     
     properties (Access = protected)
         
@@ -24,14 +24,16 @@ classdef (Abstract) Register
         
     end
     
-    methods (Abstract)
+    methods (Access = protected)
         
-        OBJ_Register = searching_strategy(Obj_Register)
+        % SearchingParam is designed as a cell to give all the parameters
+        % each searching strategy needs.
+        OBJ_Register = searching_strategy(Obj_Register, SearchingParam)
         
-        OBJ_Register = interf_register_solver(OBJ_Register, VAR_Reg)
+        VAR_REG_OUT = interf_register_solver(OBJ_Register, VAR_REG_IN)
 
         % Deformation mechanism:
-        OBJ_Register = deforxm_RT(OBJ_Register)
+%        OBJ_Register = deforxm_RT(OBJ_Register)
         
     end
     
@@ -42,7 +44,7 @@ classdef (Abstract) Register
             
              OBJ_Register.Samples = OBJ_Data.get_Samples();
              
-             OBJ_Register.numSamples = OBJ_Data.get_nuSamples();
+             OBJ_Register.numSamples = OBJ_Data.get_numSamples();
              
              [OBJ_Register.RT, OBJ_Register.sizeRT, OBJ_Register.sizeDyadicRT, OBJ_Register.indRT_Start] = OBJ_Data.get_RT_info();
              

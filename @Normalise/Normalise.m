@@ -5,8 +5,6 @@ classdef Normalise
         Samples
                 
         numSamples
-        
-        NMASK
           
         RefNorm % Target for normalisation
         
@@ -14,13 +12,19 @@ classdef Normalise
         
     end
     
+    properties (Access = protected)
+          
+        NMASK
+        
+    end
+    
     methods (Access = private)
                
         % Generate a multi-resolution B-spline dictionary for normalisation:
 %        [numBspl_1D, numBspl_2D, B] = get_BsplDict_norm(OBJ_GIRO, minScale1D, maxScale1D, minScale2D, maxScale2D, sizeMZ_Channel, normalisation);
-        function BsplBasis = get_BsplDict_norm_LS(lengthB)
+        function BsplBasis = get_BsplDict_norm_LS(OBJ_Normalise, lengthB)
         
-            sizeRT = size(Samples,1);
+            sizeRT = size(OBJ_Normalise.Samples,1);
             
             sizeDyadicRT = pow2( ceil( log2( sizeRT )));
             indRT_Start = ceil( (sizeDyadicRT - sizeRT) / 2);
@@ -64,12 +68,11 @@ classdef Normalise
     
             end
             
-            BsplBasis = sparse(BsplBasis(indRT_Start : (indRT_Start + sizeRT-1), :));
+            BsplBasis = BsplBasis(indRT_Start : (indRT_Start + sizeRT-1), :);
+            BsplBasis = sparse(BsplBasis(:, sum(BsplBasis,1) ~= 0));
             
         end
-
-        
-        
+                        
     end
     
     methods (Access = public)
@@ -79,13 +82,17 @@ classdef Normalise
             OBJ_Normalise.Samples = OBJ_Data.get_Samples();
             
             OBJ_Normalise.numSamples = OBJ_Data.get_numSamples();
-            
+           
+            % Fit the NFactor by least square:
+            OBJ_Normalise.NMASK = zeros(size(OBJ_Normalise.Samples));
+        
         end
             
         
-        % Normalisation schemes:
-        NMASK = normalise_LS(OBJ_Normalise, lengthB)
+        % Normalisation schemes: updating NMASK
+        OBJ_Normalise = normalise_LS(OBJ_Normalise, lengthB)
         
+        % Median normalising scheme: updating NMASK
         N_Median = normalise_median(OBJ_Normalise)
         
         function OBJ_Normalise = update_normalise(OBJ_Normalise, Samples)
@@ -93,9 +100,18 @@ classdef Normalise
             OBJ_Normalise.Samples = Samples;
             
             OBJ_Normalise.numSamples = size(Samples,3);
-                        
-        end
+                                   
+            % Fit the NFactor by least square:
+            OBJ_Normalise.NMASK = zeros(size(OBJ_Normalise.Samples));
             
+        end
+        
+        function Normaliser = get_Normaliser(OBJ_Normalise)
+            
+            Normaliser = OBJ_Normalise.NMASK;
+            
+        end
+
         
     end
     

@@ -1,4 +1,4 @@
-function N_Median = normalise_median(OBJ_Normalise)
+function OBJ_Normalise = normalise_median(OBJ_Normalise)
 
 N_Median = zeros(OBJ_Normalise.numSamples, 1);
 
@@ -8,3 +8,5 @@ for i = 1 : OBJ_Normalise.numSamples
     N_Median(i) = median(tmp(:));
     
 end
+
+OBJ_Normalise.NMASK = N_Median;

@@ -1,10 +1,18 @@
-classdef CTN_LS_2D < CTN
+classdef CTN_LS_2D < GIRO.CTN
     
     methods (Access = public)
         
-        function [Criterion, gradCTN] = get_Criterion(Samples, WinCTN)
+        function OBJ_CTN_LS_2D = CTN_LS_2D(Samples)
+           
+            OBJ_CTN_LS_2D@GIRO.CTN(Samples)
+            
+        end
+        
+        function [Criterion, gradCTN] = get_Criterion(OBJ_CTN_LS_2D, Samples)
             
             zeroMask = ~(sum(Samples == 0, 3) ~= 0);
+
+            numSamples = size(Samples,3);
             
             for i = 1 : numSamples
                 
@@ -19,10 +27,8 @@ classdef CTN_LS_2D < CTN
             
             % Set the values outside retention window to be zero: excluded
             % from criterion of deformation.
-
-            Samples([1:(WinCTN(1)-1) (WinCTN(end)+1):end], : , :) = 0;
-
-            Samples = log(Anscombe(Samples));
+          
+            Samples = log(GIRO.Anscombe(Samples));
 
             meanSamples = mean(Samples,3);
 

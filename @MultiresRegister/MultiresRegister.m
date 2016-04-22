@@ -1,4 +1,4 @@
-classdef MultiresRegister < Register
+classdef MultiresRegister < GIRO.Register
 
     properties (Access = protected)
   
@@ -12,7 +12,13 @@ classdef MultiresRegister < Register
         
         currentLevel
         
-        RTWinCTN_LevelN    
+        sizeRT_currentLevel
+        
+        sizeDyadicRT_currentLevel
+        
+        indRT_Start_currentLevel
+           
+        LP_Taps = [.0417 .4583 .4583 .0417]
         
     end
     
@@ -20,100 +26,59 @@ classdef MultiresRegister < Register
         
         function OBJ_MultiresRegister = MultiresRegister(OBJ_Data, numLevels)
             
-            OBJ_MultiresRegister@Register(OBJ_Data);
+            OBJ_MultiresRegister@GIRO.Register(OBJ_Data);
             
             OBJ_MultiresRegister.numLevels = numLevels;
+            
+            OBJ_MultiresRegister.ResRT_End = OBJ_Data.get_levelsRT();
                         
+            OBJ_MultiresRegister.ResRT_Begin = OBJ_MultiresRegister.ResRT_End - numLevels + 1;
+            
+            OBJ_MultiresRegister.Down_Samples = cell(OBJ_MultiresRegister.numLevels, 1);
+            
+            Samples = OBJ_MultiresRegister.Samples;
+            
+            for i = 1 : OBJ_MultiresRegister.numLevels
+               
+                % Lowpass filtering using the given LP_Taps:
+                OBJ_MultiresRegister.Down_Samples(end - i + 1) = {Samples};
+                
+                Down_Samples = zeros( size(Samples(1:2:end,:,:),1), size(Samples,2), OBJ_MultiresRegister.numSamples );
+                
+                for j = 1 : OBJ_MultiresRegister.numSamples
+                
+                    Samples(:,:,j) = filter(OBJ_MultiresRegister.LP_Taps, 1, Samples(:,:,j), [], 1);
+                
+                    Down_Samples(:,:,j) = Samples(1:2:end,:,j);
+                    
+                end
+                
+                % Downsampling:
+                Samples = Down_Samples;
+                               
+            end
+      
+            
         end
         
         
-        function OBJ_MultiresRegister = start_multires_register(OBJ_MultiresRegister)
+        function OBJ_MultiresRegister = start_multires_register(OBJ_MultiresRegister, SearchingParam)
+            
             
             % Establish multi-resolution representation:
             for i = OBJ_MultiresRegister.ResRT_Begin : OBJ_MultiresRegister.ResRT_End
-            
+                
                 OBJ_MultiresRegister.currentLevel = i;
-                
-                % Get the multiresolution representation in place:
-                
-                
+                  
                 % Call searching_strategy to do iterations within each resolution level:
-                OBJ_MulitiresRegister.search_strategy();
+                OBJ_MultiresRegister.searching_strategy(SearchingParam);
         
-%      OBJ_GIRO.channelName = channelName;
-%             
-%             OBJ_GIRO.SeaMassResMZ = SeaMassResMZ;
-%             
-%             OBJ_GIRO.SeaMassResRT_Begin = SeaMassResRT_Begin;
-%             
-%             OBJ_GIRO.SeaMassResRT_End = SeaMassResRT_End;
-%             
-%             OBJ_GIRO.SeaMassShrinkage = SeaMassShrinkage;
-%             
-%             OBJ_GIRO.SeaMassTolerance = SeaMassTolerance;
-%             
-%             OBJ_GIRO.RTWin = RTWin;
-%             
-%             OBJ_GIRO.MZWin = MZWin;
-%             
-%             OBJ_GIRO.numSamples = length(fileName);
-%             
-%             OBJ_GIRO.numChannels = length(channelName);
-% 
-%             OBJ_GIRO.indChannel = ones(OBJ_GIRO.numChannels+1,1);
-%             
-%             OBJ_GIRO.sizeRT = RTWin(2)-RTWin(1)+1;
-%  
-%             OBJ_GIRO.sizeMZ = 0;
-%             
-%             OBJ_GIRO.CP = [];
-%             
-%             OBJ_GIRO.indCP = 1;
-%             
-%             for k = 1 : OBJ_GIRO.numChannels
-%             
-%                 MZWin_k = cell2mat(MZWin(k));
-%                 
-%                 OBJ_GIRO.sizeMZ = OBJ_GIRO.sizeMZ + MZWin_k(2)-MZWin_k(1)+1;
-%                                 
-%                 OBJ_GIRO.indChannel(k+1) = OBJ_GIRO.sizeMZ + 1; 
-%                 
-%          
-%                 
-%                 
-%                 
-%                             
-%             RTWin_i = round(OBJ_DataSeaMass.RTWin / 2^(OBJ_DataSeaMass.SeaMassResRT_End - i)) + 1;
-%   
-%             sizeRT_i = RTWin_i(2) - RTWin_i(1) + 1;
-%   
-%             OBJ_DataSeaMass.sizeDyadicRT = pow2(ceil(log2(sizeRT_i)));    
-%   
-%             OBJ_DataSeaMass.RTWinCTN_LevelN(1) = round((OBJ_DataSeaMass.sizeDyadicRT - sizeRT_i) / 2);
-%   
-%             OBJ_DataSeaMass.RTWinCTN_LevelN(2) = OBJ_DataSeaMass.RTWinCTN_LevelN(1) + sizeRT_i - 1;
-%             
-%             
-%                 
-%         % L1 constrained registration using the mass-rebinned samples from 
-%         % SeaMass. The standard general L1 solver is used.
-% %         
-% %         [OBJ_GIRO, RT, RT_Adjustment, Samples_Deformed] = deform_L1LS(OBJ_GIRO, lambdaL1Deform);
-% %                 
-% %         [ctn, de_dc] = interf_L1General_1stOrder_deform(OBJ_GIRO, CP);
-% %                        
-% %         % L1 constrained normalisation using the mass-rebinned samples from
-% %         % SeaMass.  The standard general L1 solver is used.
-% %         
-% %         [MZ_Adjustment, Samples_Normalised] = normalise_L1LS(OBJ_GIRO, lambdaL1Norm);
-% %         
-% %         [ctn, de_dc] = interf_L1General_1stOrder_norm(OBJ_GIRO, CN);
-% 
-% 
+                
             end
             
         end
-            
+      
+        
     end
 
 

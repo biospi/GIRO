@@ -1,4 +1,4 @@
-classdef (Abstract) CTN
+classdef CTN
     
     properties (Access =  private)
         
@@ -10,13 +10,13 @@ classdef (Abstract) CTN
         
     methods (Access = public)
    
-        function OBJ_CTN = OBJ_CTN(Samples, WinCTN)
+        function OBJ_CTN = CTN(Samples)
                       
-            [OBJ_CTN.Criterion, OBJ_CTN.gradCTN] = get_Criterion(Samples, WinCTN);
+            [OBJ_CTN.Criterion, OBJ_CTN.gradCTN] = OBJ_CTN.get_Criterion(Samples);
             
         end
         
-        [Criterion, gradCTN] = get_Criterion(Samples, WinCTN);
+        [Criterion, gradCTN] = get_Criterion(OBJ_CTN, Samples);
         
     end
     
