@@ -1,4 +1,4 @@
-classdef Normalise
+classdef Normalise < handle
     
     properties (Access = private)
         

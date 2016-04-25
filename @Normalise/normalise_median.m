@@ -1,4 +1,4 @@
-function OBJ_Normalise = normalise_median(OBJ_Normalise)
+function normalise_median(OBJ_Normalise)
 
 N_Median = zeros(OBJ_Normalise.numSamples, 1);
 

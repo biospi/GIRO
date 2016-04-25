@@ -10,6 +10,8 @@ classdef Register < handle
         
         RT
         
+        ResRT_Sec
+        
         sizeRT
         
         sizeDyadicRT
@@ -45,6 +47,8 @@ classdef Register < handle
              OBJ_Register.Samples = OBJ_Data.get_Samples();
              
              OBJ_Register.numSamples = OBJ_Data.get_numSamples();
+             
+             OBJ_Register.ResRT_Sec = OBJ_Data.get_ResRT_Sec();
              
              [OBJ_Register.RT, OBJ_Register.sizeRT, OBJ_Register.sizeDyadicRT, OBJ_Register.indRT_Start] = OBJ_Data.get_RT_info();
              

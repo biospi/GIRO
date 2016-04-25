@@ -95,6 +95,7 @@ classdef DataSeaMass < GIRO.Data
             offsetRT = (max(offsetRT(:)) - offsetRT + 1) + RTWin_Begin_Pixel;
             OBJ_DataSeaMass.RT = offsetRT(1)*OBJ_DataSeaMass.SecPerPixel : OBJ_DataSeaMass.SecPerPixel : (offsetRT(1) + (OBJ_DataSeaMass.sizeRT - 1) * OBJ_DataSeaMass.SecPerPixel);
 
+            OBJ_DataSeaMass.sizeRT = size(OBJ_DataSeaMass.RT, 2);
 
             OBJ_DataSeaMass.offsetMZ_Thompson = max(offsetMZ(:)) * OBJ_DataSeaMass.ThompsonPerPixel; 
             MZWin_Begin_Pixel = ceil( (OBJ_DataSeaMass.MZWin_Thompson(1) - OBJ_DataSeaMass.offsetMZ_Thompson) / OBJ_DataSeaMass.ThompsonPerPixel );
@@ -120,12 +121,12 @@ classdef DataSeaMass < GIRO.Data
                     % mz downsampling:
                     if (numMZ_Levels > 0 )
                     
-                    [tmp, OBJ_DataSeaMass.sizeMZ] = OBJ_DataSeaMass.DyadicDownsampleMZ(tmp, numMZ_Levels, OBJ_DataSeaMass.BsplInteg);
+                    [tmp, sizeMZ] = OBJ_DataSeaMass.DyadicDownsampleMZ(tmp, numMZ_Levels, OBJ_DataSeaMass.BsplInteg);
                     
                     end
                     
                     % 
-                    OBJ_DataSeaMass.Samples(:, (j-1)*OBJ_DataSeaMass.sizeMZ+1 : j*OBJ_DataSeaMass.sizeMZ, i) = tmp;                
+                    OBJ_DataSeaMass.Samples(:, (j-1)*sizeMZ+1 : j*sizeMZ, i) = tmp;                
                                         
                 end
                 

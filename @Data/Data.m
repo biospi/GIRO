@@ -58,6 +58,12 @@ classdef Data
             levelsRT = log2(OBJ_Data.sizeDyadicRT);
             
         end
+        
+        function ResRT_Sec = get_ResRT_Sec(OBJ_Data)
+            
+            ResRT_Sec = OBJ_Data.RT(2) - OBJ_Data.RT(1); % For uniformly sampled data
+            
+        end
           
         function [RT, sizeRT, sizeDyadicRT, indRT_Start] = get_RT_info(OBJ_Data)
         

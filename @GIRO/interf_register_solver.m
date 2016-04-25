@@ -69,8 +69,8 @@ if sum(sum(OBJ_GIRO.indCP(:,end-numCP+1:end))) ~= 0
 for j = 1 : OBJ_GIRO.numSamples 
      
     % sub-gradient including the threshold:
-%    de_dc(j,:) = sum(de_dI(:,:,j) .* dI_dg(:,:,j) ./ (OBJ_GIRO.sizeMZ*(OBJ_GIRO.DeformedSamples(:,:,j)+.375)), 2)' * OBJ_GIRO.BsplDictDeform(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1),:);
-    de_dc(j,:) = sum(de_dI(:,:,j) .* dI_dg(:,:,j) ./ (OBJ_GIRO.DeformedSamples(:,:,j)+.375), 2)' * OBJ_GIRO.BsplDictDeform(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1),:);
+    de_dc(j,:) = sum(de_dI(:,:,j) .* dI_dg(:,:,j) ./ (OBJ_GIRO.sizeMZ*(OBJ_GIRO.DeformedSamples(:,:,j)+.375)), 2)' * OBJ_GIRO.BsplDictDeform(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1),:);
+%    de_dc(j,:) = sum(de_dI(:,:,j) .* dI_dg(:,:,j) ./ (OBJ_GIRO.DeformedSamples(:,:,j)+.375), 2)' * OBJ_GIRO.BsplDictDeform(OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1),:);
    
     de_dc(j,OBJ_GIRO.indCP(j,(end-numCP+1:end))==0) = 0;
         
