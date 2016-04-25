@@ -65,7 +65,7 @@ classdef GIRO < GIRO.MultiresRegister
         
         function Normaliser = get_Normaliser(OBJ_GIRO)
            
-            Normaliser = OBJ_GIRO.OBJ_Normaliser.get_Normalier();
+            Normaliser = OBJ_GIRO.OBJ_Normalise.get_Normaliser();
             
         end
              
