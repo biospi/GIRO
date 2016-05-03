@@ -37,7 +37,7 @@ indRT = repmat(1:OBJ_GIRO.sizeDyadicRT_currentLevel, OBJ_GIRO.numSamples, 1); % 
 
 OBJ_GIRO.RT_Adjustment = (OBJ_GIRO.BsplDictDeform * OBJ_GIRO.CP')';
 
-indKnot = indRT - OBJ_GIRO.RT_Adjustment; % Knots
+indKnot = indRT + OBJ_GIRO.RT_Adjustment; % Knots
 
 d = 3; % Order of the B-splines
 
@@ -83,7 +83,7 @@ CPVector = L1General2_OWL(@OBJ_GIRO.interf_register_solver, CPVector, zeros(size
 
 OBJ_GIRO.CP = reshape( CPVector, numel(CPVector)/OBJ_GIRO.numSamples, OBJ_GIRO.numSamples)'; 
 
-OBJ_GIRO.RT_Adjustment = -(OBJ_GIRO.BsplDictDeform * OBJ_GIRO.CP')' ;
+OBJ_GIRO.RT_Adjustment = (OBJ_GIRO.BsplDictDeform * OBJ_GIRO.CP')' ;
 
 OBJ_GIRO.RT_Adjustment = OBJ_GIRO.RT_Adjustment(:, OBJ_GIRO.indRT_Start_currentLevel : (OBJ_GIRO.sizeRT_currentLevel+OBJ_GIRO.indRT_Start_currentLevel-1)) * OBJ_GIRO.ResRT_Sec * 2^(OBJ_GIRO.ResRT_End - OBJ_GIRO.currentLevel);
 

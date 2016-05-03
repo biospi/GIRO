@@ -22,7 +22,7 @@ DeformField = 0;
 
 end 
 
-indKnot = indRT - DeformField; % Knots
+indKnot = indRT + DeformField; % Knots
     
 d = 3; % Order of the B-splines 
         
@@ -78,6 +78,6 @@ end
 
 end
 
-de_dc = OBJ_GIRO.searchingStepSize * reshape(de_dc', numel(de_dc), 1);
+de_dc = -OBJ_GIRO.searchingStepSize * reshape(de_dc', numel(de_dc), 1);
           
 end  

@@ -93,7 +93,7 @@ classdef DataSeaMass < GIRO.Data
             OBJ_DataSeaMass.offsetRT_Sec = max(offsetRT(:)) * OBJ_DataSeaMass.SecPerPixel;
             RTWin_Begin_Pixel = ceil( (OBJ_DataSeaMass.RTWin_Sec(1) - OBJ_DataSeaMass.offsetRT_Sec) / OBJ_DataSeaMass.SecPerPixel );
             offsetRT = (max(offsetRT(:)) - offsetRT + 1) + RTWin_Begin_Pixel;
-            OBJ_DataSeaMass.RT = offsetRT(1)*OBJ_DataSeaMass.SecPerPixel : OBJ_DataSeaMass.SecPerPixel : (offsetRT(1) + (OBJ_DataSeaMass.sizeRT - 1) * OBJ_DataSeaMass.SecPerPixel);
+            OBJ_DataSeaMass.RT = offsetRT(1)*OBJ_DataSeaMass.SecPerPixel : OBJ_DataSeaMass.SecPerPixel : (offsetRT(1) + (OBJ_DataSeaMass.sizeRT - 1)) * OBJ_DataSeaMass.SecPerPixel;
 
             OBJ_DataSeaMass.sizeRT = size(OBJ_DataSeaMass.RT, 2);
 
